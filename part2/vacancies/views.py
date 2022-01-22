@@ -36,10 +36,6 @@ class VacancyView(View):
         vacancy.text = vacancy_data["text"]
         vacancy.status = vacancy_data["status"]
         vacancy.created = vacancy_data["created"]
-        try:
-            vacancy.full_clean()
-        except ValidationError as e:
-            return JsonResponse(e.message_dict, status=422)
 
         vacancy.save()
         return JsonResponse({
@@ -52,10 +48,7 @@ class VacancyDetailView(DetailView):
     model = Vacancy
 
     def get(self, request, *args, **kwargs):
-        try:
-            vacancy = self.get_object()
-        except Vacancy.DoesNotExist:
-            return JsonResponse({"error": "Not found"}, status=404)
+        vacancy = self.get_object()
 
         return JsonResponse({
             "id": vacancy.id,
